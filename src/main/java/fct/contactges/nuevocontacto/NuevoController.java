@@ -5,7 +5,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import fct.contactges.model.Contacto;
-import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +16,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.converter.NumberStringConverter;
 
 public class NuevoController implements Initializable {
 
@@ -65,7 +63,6 @@ public class NuevoController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		nombreText.textProperty().bindBidirectional(contacto.nombreProperty());
-//		Bindings.bindBidirectional(telefonoText.textProperty(), contacto.telefonoProperty(), new NumberStringConverter());
 		telefonoText.textProperty().bindBidirectional(contacto.telefonoProperty());
 		emailText.textProperty().bindBidirectional(contacto.emailProperty());
 		

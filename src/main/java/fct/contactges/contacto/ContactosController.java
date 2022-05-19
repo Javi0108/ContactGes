@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import fct.contactges.App;
+import fct.contactges.MainController;
 import fct.contactges.model.Agenda;
 import fct.contactges.model.Contacto;
 import fct.contactges.nuevocontacto.NuevoController;
@@ -46,7 +47,9 @@ public class ContactosController implements Initializable {
 	// View
 	@FXML
 	private BorderPane view;
-
+	
+	//TODO Añadir la columna código contacto
+	
 	@FXML
 	private TableView<Contacto> contactosTable;
 
@@ -58,9 +61,9 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	private TableColumn<Contacto, String> emailColumn;
-	
-    @FXML
-    private TableColumn<Contacto, String> sexoColumn;
+
+	@FXML
+	private TableColumn<Contacto, String> sexoColumn;
 
 	@FXML
 	private TableColumn<Contacto, String> direccionColumn;
@@ -78,6 +81,10 @@ public class ContactosController implements Initializable {
 	private Button enviarButton;
 
 	private Stage stage;
+
+	private static int codUsuario;
+
+	MainController mainController;
 
 	// Conexión
 	public static String url = "jdbc:mysql://localhost:3306/gescon";
@@ -99,17 +106,16 @@ public class ContactosController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-		    System.out.println("Connected to Database.");
+			System.out.println("Connected to Database.");
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		// Bindings
 		seleccionado.bind(contactosTable.getSelectionModel().selectedItemProperty());
 
 		contactosTable.itemsProperty().bind(agenda.contactosProperty());
 		agenda.contactosProperty().bind(contactoList);
-		
 
 		editarButton.disableProperty().bind(seleccionado.isNull());
 		borrarButton.disableProperty().bind(seleccionado.isNull());
@@ -121,32 +127,23 @@ public class ContactosController implements Initializable {
 		telefonoColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getTelefono()));
 		sexoColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getSexo()));
 		direccionColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getDireccion()));
-		
-		try {
-			llenarTabla();
-		} catch (SQLException e2) {
-			e2.printStackTrace();
-		}
-		
+
 		// Listeners
 		nuevoButton.setOnAction(e -> onNuevoButtonAction(e));
 		editarButton.setOnAction(e -> onEditarButtonAction(e));
 		borrarButton.setOnAction(e -> onBorrarButtonAction(e));
 		enviarButton.setOnAction(e -> onEnviarButtonAction(e));
 
-		// Vista
-		stage = new Stage();
-		stage.setTitle("Agenda");
-		stage.setScene(new Scene(getView()));
-		stage.initOwner(App.primaryStage);
-		stage.initModality(Modality.APPLICATION_MODAL);
 	}
 
 	public static List<Contacto> llenarTabla() throws SQLException {
-		PreparedStatement visualiza = con.prepareStatement(
-				"SELECT contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, direccion.calle FROM contacto INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion WHERE codUsuario = 1");
-		ResultSet resultado = visualiza.executeQuery();
+		PreparedStatement selectContactos = con.prepareStatement(
+				"SELECT contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, direccion.calle FROM contacto INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion WHERE codUsuario = ?");
 
+		selectContactos.setInt(1, setCodUsuario(getCodUsuario()));
+		ResultSet resultado = selectContactos.executeQuery();
+
+		System.out.println(MainController.getCodUsuario());
 		while (resultado.next()) {
 			Contacto c = new Contacto();
 			c.setNombre(resultado.getString(1));
@@ -156,7 +153,6 @@ public class ContactosController implements Initializable {
 			c.setDireccion(resultado.getString(5));
 			contactoList.add(c);
 		}
-		
 		return contactoList;
 	}
 
@@ -185,7 +181,7 @@ public class ContactosController implements Initializable {
 		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 		Optional<ButtonType> resultado = alert.showAndWait();
 		if (ButtonType.YES.equals(resultado.get())) {
-			//TODO Hacer consulta
+			// TODO Hacer consulta
 			agenda.getContactos().remove(seleccionado.get());
 		}
 	}
@@ -219,9 +215,27 @@ public class ContactosController implements Initializable {
 	}
 
 	public void show() {
-		stage.showAndWait();
+		try {
+			stage = new Stage();
+			stage.setTitle("Agenda");
+			stage.setScene(new Scene(getView()));
+			stage.initOwner(App.primaryStage);
+			stage.initModality(Modality.APPLICATION_MODAL);
+			llenarTabla();
+			stage.showAndWait();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
+	public static int setCodUsuario(int codUsuario) {
+		return ContactosController.codUsuario = codUsuario;
+	}
+
+	public static int getCodUsuario() {
+		return codUsuario;
+	}
+
 	public TableView<Contacto> getContactosTable() {
 		return contactosTable;
 	}

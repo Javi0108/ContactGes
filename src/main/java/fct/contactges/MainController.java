@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 public class MainController implements Initializable {
 
 	// Controller
-	ContactosController contactoController = new ContactosController();
+	public static ContactosController contactoController = new ContactosController();
 
 	// Model
 	InicioSesion iniciosesion = new InicioSesion();
@@ -43,8 +43,11 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Button logInButton;
-	
+
 	public Stage stage = new Stage();
+
+	public static int codUsuario;
+	public int cantidadUsuario;
 
 	// Conexión
 	public static String url = "jdbc:mysql://localhost:3306/gescon";
@@ -64,13 +67,13 @@ public class MainController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	    try {
+		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-		    System.out.println("Connected to Database.");
+			System.out.println("Connected to Database.");
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		usuarioText.textProperty().bindBidirectional(iniciosesion.usuarioProperty());
 		passwordText.textProperty().bindBidirectional(iniciosesion.passwordProperty());
 
@@ -94,25 +97,30 @@ public class MainController implements Initializable {
 	void onlogInButtonAction(ActionEvent event) throws SQLException {
 		String user = usuarioText.getText();
 		String passw = passwordText.getText();
-		PreparedStatement logIn = con
-				.prepareStatement("SELECT COUNT(usuario) FROM usuario WHERE usuario = ? AND password = ?");
+		PreparedStatement logIn = con.prepareStatement(
+				"SELECT COUNT(codUsuario) as cantidadUsuario, codUsuario FROM usuario WHERE usuario = ? AND password = ?");
 		logIn.setString(1, user);
 		logIn.setString(2, passw);
 		ResultSet rs = logIn.executeQuery();
-		int codUsuario = 0;
 		if (rs.next()) {
-			codUsuario = rs.getInt(1);
+			cantidadUsuario = rs.getInt(1);
+			codUsuario = rs.getInt(2);
+			if (cantidadUsuario == 1) {
+				App.primaryStage.close();
+				ContactosController.setCodUsuario(getCodUsuario());
+				contactoController.show();
+			} else {
+				App.error("Inicio de sesión incorrecto", "Compruebe las credenciales ingresadas");
+			}
 		}
-		if (codUsuario == 1) {
-			App.primaryStage.close();
-			contactoController.show();
-		} else {
-			App.error("Inicio de sesión incorrecto", "Compruebe las credenciales ingresadas");
-		}
+
 	}
-	
+
 	public BorderPane getView() {
 		return view;
 	}
 
+	public static int getCodUsuario() {
+		return codUsuario;
+	}
 }
