@@ -7,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -19,11 +18,9 @@ import fct.contactges.nuevocontacto.NuevoController;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +34,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert.AlertType;
 
 public class ContactosController implements Initializable {
@@ -113,7 +109,6 @@ public class ContactosController implements Initializable {
 
 		contactosTable.itemsProperty().bind(agenda.contactosProperty());
 		agenda.contactosProperty().bind(contactoList);
-//		contactosTable.itemsProperty().bind(contactoList);
 		
 
 		editarButton.disableProperty().bind(seleccionado.isNull());
@@ -167,7 +162,6 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	void onNuevoButtonAction(ActionEvent event) {
-		Contacto c = new Contacto();
 		NuevoController controller = new NuevoController();
 		Contacto nuevo = controller.show(stage);
 		if (nuevo != null) {
