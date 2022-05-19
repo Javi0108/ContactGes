@@ -1,25 +1,22 @@
 package fct.contactges.model;
 
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Contacto {
 	private StringProperty nombre = new SimpleStringProperty(this, "nombre");
-	private LongProperty telefono;
-	private StringProperty email;
-	private StringProperty sexo;
-	private StringProperty direccion;
+	private StringProperty telefono = new SimpleStringProperty(this, "telefono");
+	private StringProperty email = new SimpleStringProperty(this, "email");
+	private StringProperty sexo = new SimpleStringProperty(this, "sexo");
+	private StringProperty direccion = new SimpleStringProperty(this, "direccion");
 
 
-	public Contacto(String nombre, Long telefono, String email, String sexo, String direccion) {
+	public Contacto(String nombre, String telefono, String email, String sexo, String direccion) {
 		this.nombre = new SimpleStringProperty(this, "nombre", nombre);
-		this.telefono = new SimpleLongProperty(this, "telefono", telefono);
+		this.telefono = new SimpleStringProperty(this, "telefono", telefono);
 		this.email = new SimpleStringProperty(this, "email", email);
 		this.sexo = new SimpleStringProperty(this, "sexo", sexo);
 		this.direccion = new SimpleStringProperty(this, "direccion", direccion);
-
 	}
 	
 	public Contacto() {
@@ -38,15 +35,15 @@ public class Contacto {
 		this.nombreProperty().set(nombre);
 	}
 
-	public final LongProperty telefonoProperty() {
+	public final StringProperty telefonoProperty() {
 		return this.telefono;
 	}
 
-	public final long getTelefono() {
+	public final String getTelefono() {
 		return this.telefonoProperty().get();
 	}
 
-	public final void setTelefono(final long telefono) {
+	public final void setTelefono(final String telefono) {
 		this.telefonoProperty().set(telefono);
 	}
 	
@@ -54,12 +51,12 @@ public class Contacto {
 		return this.email;
 	}
 	
-	public StringProperty getEmail() {
-		return email;
+	public String getEmail() {
+		return this.emailProperty().get();
 	}
 
-	public void setEmail(StringProperty email) {
-		this.email = email;
+	public void setEmail(final String email) {
+		this.emailProperty().set(email);
 	}
 	
 	public final StringProperty sexoProperty() {

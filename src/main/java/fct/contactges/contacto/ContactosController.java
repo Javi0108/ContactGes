@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -18,7 +19,9 @@ import fct.contactges.nuevocontacto.NuevoController;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,18 +37,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Alert.AlertType;
 
 public class ContactosController implements Initializable {
 
 	// Model
-	private Agenda agenda = new Agenda();
+	private static Agenda agenda = new Agenda();
 	private ObjectProperty<Contacto> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
-//	private ObservableList<Contacto> contactosList = FXCollections.observableArrayList();
-	private static ListProperty<Contacto> contactosList = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private static ListProperty<Contacto> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 	// View
-
 	@FXML
 	private BorderPane view;
 
@@ -56,7 +58,7 @@ public class ContactosController implements Initializable {
 	private TableColumn<Contacto, String> nombreColumn;
 
 	@FXML
-	private TableColumn<Contacto, Number> telefonoColumn;
+	private TableColumn<Contacto, String> telefonoColumn;
 
 	@FXML
 	private TableColumn<Contacto, String> emailColumn;
@@ -110,24 +112,27 @@ public class ContactosController implements Initializable {
 		seleccionado.bind(contactosTable.getSelectionModel().selectedItemProperty());
 
 		contactosTable.itemsProperty().bind(agenda.contactosProperty());
+		agenda.contactosProperty().bind(contactoList);
+//		contactosTable.itemsProperty().bind(contactoList);
+		
 
 		editarButton.disableProperty().bind(seleccionado.isNull());
 		borrarButton.disableProperty().bind(seleccionado.isNull());
 		enviarButton.disableProperty().bind(seleccionado.isNull());
 
 		// Factories
-		nombreColumn.setCellValueFactory(value -> value.getValue().nombreProperty());
-		telefonoColumn.setCellValueFactory(value -> value.getValue().telefonoProperty());
-		emailColumn.setCellValueFactory(value -> value.getValue().emailProperty());
-		sexoColumn.setCellValueFactory(value -> value.getValue().sexoProperty());
-		direccionColumn.setCellValueFactory(value -> value.getValue().direccionProperty());
+		nombreColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getNombre()));
+		emailColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getEmail()));
+		telefonoColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getTelefono()));
+		sexoColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getSexo()));
+		direccionColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getDireccion()));
 		
 		try {
 			llenarTabla();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e2) {
+			e2.printStackTrace();
 		}
-
+		
 		// Listeners
 		nuevoButton.setOnAction(e -> onNuevoButtonAction(e));
 		editarButton.setOnAction(e -> onEditarButtonAction(e));
@@ -142,22 +147,27 @@ public class ContactosController implements Initializable {
 		stage.initModality(Modality.APPLICATION_MODAL);
 	}
 
-	public static void llenarTabla() throws SQLException {
+	public static List<Contacto> llenarTabla() throws SQLException {
 		PreparedStatement visualiza = con.prepareStatement(
-				"SELECT contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, direccion.calle FROM contacto INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion");
+				"SELECT contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, direccion.calle FROM contacto INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion WHERE codUsuario = 1");
 		ResultSet resultado = visualiza.executeQuery();
 
-		Agenda a = new Agenda();
 		while (resultado.next()) {
-			Contacto c = new Contacto(resultado.getString(1), resultado.getLong(2), resultado.getString(3), resultado.getString(4), resultado.getString(5));
-			System.out.println(c.getNombre());
-			contactosList.add(c);
-			a.getContactos().add(c);
+			Contacto c = new Contacto();
+			c.setNombre(resultado.getString(1));
+			c.setTelefono(resultado.getString(2));
+			c.setEmail(resultado.getString(3));
+			c.setSexo(resultado.getString(4));
+			c.setDireccion(resultado.getString(5));
+			contactoList.add(c);
 		}
+		
+		return contactoList;
 	}
 
 	@FXML
 	void onNuevoButtonAction(ActionEvent event) {
+		Contacto c = new Contacto();
 		NuevoController controller = new NuevoController();
 		Contacto nuevo = controller.show(stage);
 		if (nuevo != null) {
@@ -230,7 +240,7 @@ public class ContactosController implements Initializable {
 		return sexoColumn;
 	}
 
-	public TableColumn<Contacto, Number> getTelefonoColumn() {
+	public TableColumn<Contacto, String> getTelefonoColumn() {
 		return telefonoColumn;
 	}
 

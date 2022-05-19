@@ -51,7 +51,7 @@ public class NuevoController implements Initializable {
 	private Button cancelarButton;
 
 	public Stage stage = new Stage();
-
+	
 	public NuevoController() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/NuevoContactoView.fxml"));
@@ -65,9 +65,10 @@ public class NuevoController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		nombreText.textProperty().bindBidirectional(contacto.nombreProperty());
-		telefonoText.textProperty().bindBidirectional(contacto.telefonoProperty(), new NumberStringConverter());
+//		Bindings.bindBidirectional(telefonoText.textProperty(), contacto.telefonoProperty(), new NumberStringConverter());
+		telefonoText.textProperty().bindBidirectional(contacto.telefonoProperty());
 		emailText.textProperty().bindBidirectional(contacto.emailProperty());
-
+		
 		sexoCombo.getItems().addAll("Hombre", "Mujer", "Otro");
 		sexoCombo.valueProperty().bindBidirectional(contacto.sexoProperty());
 
