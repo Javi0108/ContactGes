@@ -9,10 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import fct.contactges.App;
 import fct.contactges.contacto.ContactosController;
-import fct.contactges.model.Agenda;
 import fct.contactges.model.Contacto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.converter.NumberStringConverter;
 
 public class NuevoController implements Initializable {
 
@@ -122,6 +122,8 @@ public class NuevoController implements Initializable {
 		sexo = sexoCombo.getValue();
 		direccion = direccionCombo.getSelectionModel().getSelectedItem();
 		codUsuario = ContactosController.getCodUsuario();
+		Pattern emailPattern = Pattern
+				.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
 		try {
 			PreparedStatement inserta = con.prepareStatement(
@@ -132,7 +134,8 @@ public class NuevoController implements Initializable {
 			} else {
 				App.error("Error en el teléfono", "Inserte bien el número de teléfono");
 			}
-			if (email.contains("@")) {
+			Matcher matcher = emailPattern.matcher(email);
+			if (matcher.find() == true) {
 				inserta.setString(3, email);
 			} else {
 				App.error("Error en el email", "Inserte bien el email");
@@ -156,8 +159,7 @@ public class NuevoController implements Initializable {
 	private Contacto onCancelarButtonAction(ActionEvent e) {
 		try {
 			con.close();
-			System.exit(0);
-//			stage.close();
+			stage.close();
 			return null;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -167,7 +169,7 @@ public class NuevoController implements Initializable {
 	}
 
 	@FXML
-	int onGetCodigoAction(ActionEvent event) {
+	public int onGetCodigoAction(ActionEvent event) {
 		nomMunicipio = direccionCombo.getSelectionModel().getSelectedItem();
 
 		try {
@@ -222,7 +224,7 @@ public class NuevoController implements Initializable {
 	public BorderPane getView() {
 		return view;
 	}
-	
+
 	public static Contacto getContacto() {
 		return contacto;
 	}

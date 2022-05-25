@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -21,11 +20,9 @@ import fct.contactges.model.Contacto;
 import fct.contactges.nuevocontacto.NuevoController;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -47,7 +44,7 @@ public class ContactosController implements Initializable {
 	// Model
 	private static Agenda agenda = new Agenda();
 	public static Contacto contacto = new Contacto();
-	private ObjectProperty<Contacto> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
+	public ObjectProperty<Contacto> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
 	private static ListProperty<Contacto> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 	// View
@@ -56,9 +53,9 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	private TableView<Contacto> contactosTable;
-	
-    @FXML
-    private TableColumn<Contacto, String> idColumn;
+
+	@FXML
+	private TableColumn<Contacto, String> idColumn;
 
 	@FXML
 	private TableColumn<Contacto, String> nombreColumn;
@@ -170,8 +167,8 @@ public class ContactosController implements Initializable {
 	@FXML
 	void onNuevoButtonAction(ActionEvent event) {
 		NuevoController controller = new NuevoController();
-		Contacto contacto = controller.show(App.getPrimaryStage());
-		if(controller != null) {
+		controller.show(App.getPrimaryStage());
+		if (controller != null) {
 			try {
 				contactoList.add(setContacto(NuevoController.getContacto()));
 				contactoList.clear();
@@ -179,7 +176,7 @@ public class ContactosController implements Initializable {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}	
+		}
 	}
 
 	@FXML
@@ -187,7 +184,7 @@ public class ContactosController implements Initializable {
 		try {
 			String nombre = seleccionado.get().getNombre();
 			int codContacto = Integer.parseInt(seleccionado.get().getCodContacto());
-			
+
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Eliminar contacto");
 			alert.setHeaderText("Se dispone a eliminar a " + nombre + ".");
@@ -211,28 +208,24 @@ public class ContactosController implements Initializable {
 	void onEnviarButtonAction(ActionEvent event) {
 		try {
 			EnviarController email = new EnviarController();
-			stage = new Stage();
-			stage.setTitle("Enviar Email");
-			stage.setScene(new Scene(email.getView()));
-			stage.initOwner(App.getPrimaryStage());
-			stage.initModality(Modality.APPLICATION_MODAL);
-			stage.showAndWait();
+			email.show();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-//	void onEditarButtonAction(ActionEvent e) {
-//
-//	}
 
 	@FXML
 	void onEditarButtonAction(ActionEvent e) {
 		EditarController controller = new EditarController();
-		controller.setContacto(seleccionado.get());
-		controller.show(App.getPrimaryStage());
+		controller.show(App.getPrimaryStage(), seleccionado.get());
+		try {
+			contactoList.clear();
+			llenarTabla();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
-	
+
 	public BorderPane getView() {
 		return view;
 	}
@@ -245,7 +238,7 @@ public class ContactosController implements Initializable {
 				stage.getIcons().setAll(parentStage.getIcons());
 			}
 			stage.setTitle("Agenda");
-			stage.setScene(new Scene(getView()));
+			stage.setScene(new Scene(getView(), 680, 480));
 			stage.initOwner(App.getPrimaryStage());
 			stage.initModality(Modality.APPLICATION_MODAL);
 			llenarTabla();

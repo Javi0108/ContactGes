@@ -1,14 +1,15 @@
 package fct.contactges;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+//import java.sql.Connection;
+//import java.sql.DriverManager;
+//import java.sql.SQLException;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class App extends Application {
@@ -26,7 +27,9 @@ public class App extends Application {
 		//
 				
 		primaryStage.setTitle("Agenda");
-		primaryStage.setScene(new Scene(mainController.getView(), 320, 240));
+		primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("/img/logo.png")));
+		primaryStage.setScene(new Scene(mainController.getView(), 290, 300));
+		primaryStage.setResizable(false);
 		primaryStage.show();
 
 	}

@@ -5,12 +5,16 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import fct.contactges.App;
 import fct.contactges.contacto.ContactosController;
 import fct.contactges.model.Contacto;
-import fct.contactges.nuevocontacto.NuevoController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,7 +30,7 @@ import javafx.stage.Stage;
 public class EditarController implements Initializable {
 
 	// model
-	private Contacto contacto = new Contacto();
+	private static Contacto contacto = new Contacto();
 
 	// Vista
 	@FXML
@@ -48,7 +52,7 @@ public class EditarController implements Initializable {
 	private ComboBox<String> direccionCombo;
 
 	@FXML
-	private Button crearButton;
+	private Button modificarButton;
 
 	@FXML
 	private Button cancelarButton;
@@ -58,9 +62,19 @@ public class EditarController implements Initializable {
 	public static String usr = "root";
 	public static String pswd = "";
 	public static Connection con;
-	
+
+	int codDireccion;
+	static String nomMunicipio;
+
+	public String nombre;
+	public String telefono;
+	public String email;
+	public String sexo;
+	public String direccion;
+	public String codContacto;
+
 	public Stage stage;
-	
+
 	public EditarController() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/EditarContactoView.fxml"));
@@ -68,7 +82,8 @@ public class EditarController implements Initializable {
 			loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}	}
+		}
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -86,31 +101,103 @@ public class EditarController implements Initializable {
 		sexoCombo.getItems().addAll("H", "M", "X");
 		sexoCombo.valueProperty().bindBidirectional(contacto.sexoProperty());
 
-		direccionCombo.getItems().addAll(NuevoController.obtenerCodigosDireccion());
+		direccionCombo.getItems().addAll(obtenerCodigosDireccion());
 		direccionCombo.valueProperty().bindBidirectional(contacto.direccionProperty());
-		
-		crearButton.setText("Editar");
-		crearButton.setOnAction(e -> onCrearButtonAction(e));
+
+		modificarButton.setOnAction(e -> onModificarButtonAction(e));
 		cancelarButton.setOnAction(e -> onCancelarButtonAction(e));
 	}
 
+	@FXML
+	private void onModificarButtonAction(ActionEvent e) {
+		nombre = nombreText.getText();
+		telefono = telefonoText.getText();
+		email = emailText.getText();
+		sexo = sexoCombo.getValue();
+		direccion = direccionCombo.getSelectionModel().getSelectedItem();
+		codContacto = getContacto().getCodContacto();
+		Pattern emailPattern = Pattern
+				.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+
+		try {
+			PreparedStatement inserta = con.prepareStatement(
+					"UPDATE contacto set nomContacto = ?, numTelefono = ?, eMail = ?, sexo = ?, codDireccion = ? WHERE codContacto = ?");
+			inserta.setString(1, nombre);
+			if (telefono.length() == 9) {
+				inserta.setString(2, telefono);
+			} else {
+				App.error("Error en el teléfono", "Inserte bien el número de teléfono");
+			}
+			Matcher matcher = emailPattern.matcher(email);
+			if (matcher.find() == true) {
+				inserta.setString(3, email);
+			} else {
+				App.error("Error en el email", "Inserte bien el email");
+			}
+			inserta.setString(4, sexo);
+			inserta.setInt(5, onGetCodigoAction(e));
+			inserta.setInt(6, Integer.parseInt(codContacto));
+			inserta.execute();
+			App.info("Modificación Realizada");
+			stage.close();
+			con.close();
+		} catch (Exception e2) {
+			e2.getStackTrace();
+			App.error("Error en la modificación", "No se pudo modificar el contacto: " + e2);
+		}
+	}
+	
+	@FXML
 	private void onCancelarButtonAction(ActionEvent e) {
 		try {
 			con.close();
-			System.exit(0);
-//			stage.close();
+			stage.close();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
 	}
 
-	private void onCrearButtonAction(ActionEvent e) {
-//		PreparedStatement habitacion = con.prepareStatement(
-//				"SELECT * FROM habitaciones WHERE habitaciones.codHotel = ? AND habitaciones.numHabitacion = ?;");
-//		habitacion.setString(1, );
+	@FXML
+	public int onGetCodigoAction(ActionEvent event) {
+		nomMunicipio = direccionCombo.getSelectionModel().getSelectedItem();
+
+		try {
+			PreparedStatement visualiza = con.prepareStatement("SELECT direccion.codDireccion FROM direccion "
+					+ "INNER JOIN municipio ON municipio.codMunicipio = direccion.codMunicipio "
+					+ "WHERE nomMunicipio = ?");
+			visualiza.setString(1, nomMunicipio);
+			ResultSet resultado = visualiza.executeQuery();
+
+			while (resultado.next()) {
+				codDireccion = resultado.getInt(1);
+			}
+			return codDireccion;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return codDireccion;
+		}
 	}
-	
-	public Contacto show(Stage parentStage) {
+
+	public static ArrayList<String> obtenerCodigosDireccion() {
+		ArrayList<String> municipios = new ArrayList<String>();
+		try {
+			PreparedStatement visualiza = con.prepareStatement("SELECT nomMunicipio FROM municipio");
+			ResultSet resultado = visualiza.executeQuery();
+
+			while (resultado.next()) {
+				nomMunicipio = resultado.getString(1);
+				municipios.add(nomMunicipio);
+			}
+			return municipios;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public Contacto show(Stage parentStage, Contacto enviado) {
+		contacto = enviado;
+		darValores();
 		stage = new Stage();
 		if (parentStage != null) {
 			stage.initOwner(parentStage);
@@ -125,15 +212,19 @@ public class EditarController implements Initializable {
 		return contacto;
 	}
 
+	private void darValores() {
+		nombreText.setText(contacto.getNombre());
+		telefonoText.setText(contacto.getTelefono());
+		emailText.setText(contacto.getEmail());
+		sexoCombo.setValue(contacto.getSexo());
+		direccionCombo.setValue(contacto.getDireccion());
+	}
+
 	public BorderPane getView() {
 		return view;
 	}
-	
+
 	public Contacto getContacto() {
 		return contacto;
-	}
-
-	public void setContacto(Contacto contacto) {
-		this.contacto = contacto;
 	}
 }

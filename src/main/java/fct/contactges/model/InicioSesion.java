@@ -2,12 +2,14 @@ package fct.contactges.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.Parent;
 
 public class InicioSesion {
 	
 	private StringProperty usuario = new SimpleStringProperty(this, "usuario");
 	private StringProperty password = new SimpleStringProperty(this, "password");
+	private StringProperty email = new SimpleStringProperty(this, "email");
+	private StringProperty emailPass = new SimpleStringProperty(this, "emailPass");
+	
 	public final StringProperty usuarioProperty() {
 		return this.usuario;
 	}
@@ -30,5 +32,29 @@ public class InicioSesion {
 	
 	public final void setPassword(final String password) {
 		this.passwordProperty().set(password);
+	}
+
+	public final StringProperty emailProperty() {
+		return this.email;
+	}
+	
+	public final String getEmail() {
+		return this.emailProperty().get();
+	}
+	
+	public final void setEmail(final String email) {
+		this.emailProperty().set(email);
+	}
+	
+	public final StringProperty emailPassProperty() {
+		return this.emailPass;
+	}
+	
+	public final String getEmailPass() {
+		return this.emailPassProperty().get();
+	}
+	
+	public final void setEmailPass(final String emailPass) {
+		this.emailPassProperty().set(emailPass);
 	}
 }
