@@ -22,9 +22,9 @@ public class App extends Application {
 		App.primaryStage = primaryStage;
 		mainController = new MainController();
 						
-		primaryStage.setTitle("Agenda");
+		primaryStage.setTitle("ContactGes");
 		primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("/img/logo.png")));
-		primaryStage.setScene(new Scene(mainController.getView(), 290, 300));
+		primaryStage.setScene(new Scene(mainController.getView(), 290, 335));
 		primaryStage.setResizable(false);
 		primaryStage.show();
 

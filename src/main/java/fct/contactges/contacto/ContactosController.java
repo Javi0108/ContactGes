@@ -15,7 +15,6 @@ import fct.contactges.App;
 import fct.contactges.MainController;
 import fct.contactges.editarcontacto.EditarController;
 import fct.contactges.enviaremail.EnviarController;
-import fct.contactges.model.Agenda;
 import fct.contactges.model.Contacto;
 import fct.contactges.nuevocontacto.NuevoController;
 import javafx.beans.property.ListProperty;
@@ -43,7 +42,6 @@ import javafx.scene.control.Alert.AlertType;
 public class ContactosController implements Initializable {
 
 	// Model
-	private static Agenda agenda = new Agenda();
 	public static Contacto contacto = new Contacto();
 	public ObjectProperty<Contacto> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
 	private static ListProperty<Contacto> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
@@ -84,7 +82,7 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	private Button enviarButton;
-
+	
 	public static Stage stage;
 
 	private static int codUsuario;
@@ -118,9 +116,7 @@ public class ContactosController implements Initializable {
 
 		// Bindings
 		seleccionado.bind(contactosTable.getSelectionModel().selectedItemProperty());
-
-		contactosTable.itemsProperty().bind(agenda.contactosProperty());
-		agenda.contactosProperty().bind(contactoList);
+		contactosTable.itemsProperty().bind(contactoList);
 
 		editarButton.disableProperty().bind(seleccionado.isNull());
 		borrarButton.disableProperty().bind(seleccionado.isNull());
@@ -204,7 +200,7 @@ public class ContactosController implements Initializable {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			App.error("ERROR", "Error al eliminar el contacto.");
+			App.error("ERROR", "Error al eliminar el contacto: " + e);
 		}
 	}
 
@@ -212,7 +208,7 @@ public class ContactosController implements Initializable {
 	void onEnviarButtonAction(ActionEvent event) {
 		try {
 			EnviarController email = new EnviarController();
-			email.show(App.getPrimaryStage());
+			email.show(App.getPrimaryStage(), seleccionado.get());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -241,7 +237,7 @@ public class ContactosController implements Initializable {
 				stage.initOwner(parentStage);
 				stage.getIcons().setAll(parentStage.getIcons());
 			}
-			stage.setTitle("Agenda");
+			stage.setTitle("ContactGes");
 			stage.setScene(new Scene(getView(), 680, 480));
 			stage.initOwner(App.getPrimaryStage());
 			stage.initModality(Modality.APPLICATION_MODAL);

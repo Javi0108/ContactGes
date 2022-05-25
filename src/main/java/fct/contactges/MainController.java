@@ -43,6 +43,9 @@ public class MainController implements Initializable {
 
 	@FXML
 	private Button logInButton;
+	
+    @FXML
+    private Button singUpButton;
 
 	public static Stage stage = new Stage();
 
@@ -123,6 +126,11 @@ public class MainController implements Initializable {
 		}
 
 	}
+	
+    @FXML
+    void onSingUpButtonAction(ActionEvent event) {
+
+    }
 
 	public BorderPane getView() {
 		return view;

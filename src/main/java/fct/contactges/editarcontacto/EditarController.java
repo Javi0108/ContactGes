@@ -203,7 +203,7 @@ public class EditarController implements Initializable {
 			stage.initOwner(parentStage);
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
-		stage.setTitle("Nuevo contacto");
+		stage.setTitle("ContactGes - Editar contacto");
 		stage.setScene(new Scene(getView(), 320, 200));
 		stage.setResizable(false);
 		stage.initOwner(ContactosController.stage);

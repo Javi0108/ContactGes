@@ -16,8 +16,8 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;
 
 import fct.contactges.App;
-import fct.contactges.MainController;
 import fct.contactges.contacto.ContactosController;
+import fct.contactges.model.Contacto;
 import fct.contactges.model.EnviarModel;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 public class EnviarController implements Initializable {
 
 	private EnviarModel model = new EnviarModel();
+	private Contacto contacto = new Contacto();
 
 	@FXML
 	private BorderPane view;
@@ -94,12 +95,6 @@ public class EnviarController implements Initializable {
 		Bindings.bindBidirectional(model.asuntoProperty(), txtAsunto.textProperty());
 		Bindings.bindBidirectional(model.mensajeProperty(), txtMensaje.textProperty());
 
-		txtRemitente.setText(getEmail());
-		txtPass.setText(getEmailPass());
-		txtDestinatario.setText("gardojavi@gmail.com");
-		txtAsunto.setText("Saludo");
-		txtMensaje.setText("Hola que tal andas");
-
 		enviarButton.setOnAction(e -> {
 			try {
 				OnActionEnviar(e);
@@ -136,13 +131,19 @@ public class EnviarController implements Initializable {
 		stage.close();
 	}
 
-	public void show(Stage parentStage) {
+	public void show(Stage parentStage, Contacto enviado) {
+		contacto = enviado;
+		
+		txtRemitente.setText(getEmail());
+		txtPass.setText(getEmailPass());
+		txtDestinatario.setText(contacto.getEmail());
+
 		stage = new Stage();
 		if (parentStage != null) {
 			stage.initOwner(parentStage);
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
-		stage.setTitle("Agenda");
+		stage.setTitle("ContactGes - Enviar Email");
 		stage.setScene(new Scene(getView()));
 		stage.initOwner(ContactosController.stage);
 		stage.initModality(Modality.APPLICATION_MODAL);

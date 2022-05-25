@@ -104,11 +104,6 @@ public class NuevoController implements Initializable {
 		direccionCombo.getItems().addAll(obtenerCodigosDireccion());
 		direccionCombo.valueProperty().bindBidirectional(contacto.direccionProperty());
 
-		nombreText.setText("Thamara García");
-		telefonoText.setText("999999999");
-		emailText.setText("thamara@gmail.com");
-		sexoCombo.setValue("M");
-
 		direccionCombo.setOnAction(e -> onGetCodigoAction(e));
 		crearButton.setOnAction(e -> onCrearButtonAction(e));
 		cancelarButton.setOnAction(e -> onCancelarButtonAction(e));
@@ -212,7 +207,7 @@ public class NuevoController implements Initializable {
 			stage.initOwner(parentStage);
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
-		stage.setTitle("Nuevo contacto");
+		stage.setTitle("ContactGes - Nuevo contacto");
 		stage.setScene(new Scene(getView(), 320, 200));
 		stage.setResizable(false);
 		stage.initOwner(ContactosController.stage);
