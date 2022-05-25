@@ -1,9 +1,5 @@
 package fct.contactges;
 
-//import java.sql.Connection;
-//import java.sql.DriverManager;
-//import java.sql.SQLException;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -41,7 +37,7 @@ public class App extends Application {
 	public static boolean confirm(String header, String content) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.initOwner(primaryStage);
-		alert.setTitle("Agenda");
+		alert.setTitle("ContactGes - Confirm");
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		return alert.showAndWait().get().equals(ButtonType.OK);
@@ -50,7 +46,7 @@ public class App extends Application {
 	public static void error(String header, String content) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.initOwner(primaryStage);
-		alert.setTitle("Agenda");
+		alert.setTitle("ContactGes - Error");
 		alert.setHeaderText(header);
 		alert.setContentText(content);
 		alert.showAndWait();
@@ -59,9 +55,9 @@ public class App extends Application {
 	public static void info(String header) {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.initOwner(primaryStage);
-		alert.setTitle("Agenda-info");
+		alert.setTitle("ContactGes - Info");
 		alert.setHeaderText(header);
-		alert.setContentText("");
+//		alert.setContentText("");
 		alert.initOwner(primaryStage);
 		alert.showAndWait();
 	}
