@@ -87,7 +87,7 @@ public class EnviarController implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+	
 		Bindings.bindBidirectional(model.remitenteProperty(), txtRemitente.textProperty());
 		Bindings.bindBidirectional(model.contraseñaProperty(), txtPass.textProperty());
 		Bindings.bindBidirectional(model.destinatarioProperty(), txtDestinatario.textProperty());
@@ -136,11 +136,15 @@ public class EnviarController implements Initializable {
 		stage.close();
 	}
 
-	public void show() {
+	public void show(Stage parentStage) {
 		stage = new Stage();
+		if (parentStage != null) {
+			stage.initOwner(parentStage);
+			stage.getIcons().setAll(parentStage.getIcons());
+		}
 		stage.setTitle("Agenda");
 		stage.setScene(new Scene(getView()));
-		stage.initOwner(MainController.stage);
+		stage.initOwner(ContactosController.stage);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.showAndWait();
 	}

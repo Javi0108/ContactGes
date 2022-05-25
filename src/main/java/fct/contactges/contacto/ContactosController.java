@@ -37,6 +37,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
 import javafx.scene.control.Alert.AlertType;
 
 public class ContactosController implements Initializable {
@@ -187,10 +188,13 @@ public class ContactosController implements Initializable {
 
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Eliminar contacto");
+			Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+			stage.getIcons().add(new Image(this.getClass().getResource("logo.png").toString()));
 			alert.setHeaderText("Se dispone a eliminar a " + nombre + ".");
 			alert.setContentText("¿Desea eliminar el contacto?");
 			alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 			Optional<ButtonType> resultado = alert.showAndWait();
+			
 			if (ButtonType.YES.equals(resultado.get())) {
 				PreparedStatement borrarContacto;
 				borrarContacto = con.prepareStatement("DELETE FROM contacto WHERE codContacto = ?");
@@ -208,7 +212,7 @@ public class ContactosController implements Initializable {
 	void onEnviarButtonAction(ActionEvent event) {
 		try {
 			EnviarController email = new EnviarController();
-			email.show();
+			email.show(App.getPrimaryStage());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

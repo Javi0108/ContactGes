@@ -33,33 +33,33 @@
          <children>
             <Button fx:id="nuevoButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNuevoButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/mas.png" />
+                        <Image url="@../img/add-32x32.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
             <Button fx:id="editarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEditarButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/edit.png" />
+                        <Image url="@../img/edit-32x32.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
             <Button fx:id="borrarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBorrarButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/delete.png" />
+                        <Image url="@../img/delete-32x32.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
             <Button fx:id="enviarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEnviarButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../img/enviar_email.png" />
+                        <Image url="@../img/email-32x32.png" />
                      </image>
                   </ImageView>
                </graphic></Button>

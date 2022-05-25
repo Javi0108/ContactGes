@@ -93,7 +93,7 @@ public class EditarController implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
+		
 		nombreText.textProperty().bindBidirectional(contacto.nombreProperty());
 		telefonoText.textProperty().bindBidirectional(contacto.telefonoProperty());
 		emailText.textProperty().bindBidirectional(contacto.emailProperty());

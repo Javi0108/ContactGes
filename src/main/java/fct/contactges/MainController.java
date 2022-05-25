@@ -53,7 +53,7 @@ public class MainController implements Initializable {
 	public static String url = "jdbc:mysql://localhost:3306/gescon";
 	public static String usr = "root";
 	public static String pswd = "";
-	static Connection con;
+	Connection con;
 
 	public MainController() {
 		try {

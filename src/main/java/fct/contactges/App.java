@@ -21,11 +21,7 @@ public class App extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		App.primaryStage = primaryStage;
 		mainController = new MainController();
-		
-		//TODO Crear una conexion mas optima
-//		AccesoBD.getConnection();
-		//
-				
+						
 		primaryStage.setTitle("Agenda");
 		primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("/img/logo.png")));
 		primaryStage.setScene(new Scene(mainController.getView(), 290, 300));

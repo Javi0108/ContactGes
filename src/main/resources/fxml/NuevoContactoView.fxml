@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -31,7 +33,7 @@
                   <Insets top="5.0" />
                </GridPane.margin>
             </Label>
-            <Label text="Teléfono" GridPane.rowIndex="1">
+            <Label text="Teléfono:" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets left="5.0" />
                </GridPane.margin></Label>
@@ -69,11 +71,25 @@
    <bottom>
       <HBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="crearButton" defaultButton="true" mnemonicParsing="false" onAction="#onCrearButtonAction" text="Crear" />
-            <Button fx:id="cancelarButton" cancelButton="true" mnemonicParsing="false" onAction="#onCancelarButtonAction" text="Cancelar" />
+            <Button fx:id="crearButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onCrearButtonAction" HBox.hgrow="SOMETIMES">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/crear.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="cancelarButton" cancelButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onCancelarButtonAction" HBox.hgrow="SOMETIMES">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/cancelar.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
          </children>
          <padding>
-            <Insets bottom="15.0" />
+            <Insets bottom="5.0" left="5.0" right="5.0" />
          </padding>
       </HBox>
    </bottom>
