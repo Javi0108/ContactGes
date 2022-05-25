@@ -2,8 +2,17 @@ package fct.contactges.nuevocontacto;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import fct.contactges.App;
+import fct.contactges.contacto.ContactosController;
+import fct.contactges.model.Agenda;
 import fct.contactges.model.Contacto;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,12 +25,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 
 public class NuevoController implements Initializable {
 
 	// model
-	private Contacto nuevo, devuelto;
-	private Contacto contacto = new Contacto();
+	private static Contacto contacto = new Contacto();
 
 	// Vista
 	@FXML
@@ -40,7 +49,7 @@ public class NuevoController implements Initializable {
 	private ComboBox<String> sexoCombo;
 
 	@FXML
-	private TextField provinciaText;
+	private ComboBox<String> direccionCombo;
 
 	@FXML
 	private Button crearButton;
@@ -48,8 +57,24 @@ public class NuevoController implements Initializable {
 	@FXML
 	private Button cancelarButton;
 
-	public Stage stage = new Stage();
-	
+	// Conexión
+	public static String url = "jdbc:mysql://localhost:3306/gescon";
+	public static String usr = "root";
+	public static String pswd = "";
+	public static Connection con;
+
+	public Stage stage;
+	public String Sentencia;
+	int codDireccion;
+	static String nomMunicipio;
+
+	public String nombre;
+	public String telefono;
+	public String email;
+	public String sexo;
+	public String direccion;
+	int codUsuario;
+
 	public NuevoController() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/NuevoContactoView.fxml"));
@@ -62,28 +87,121 @@ public class NuevoController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		try {
+			con = DriverManager.getConnection(url, usr, pswd);
+			System.out.println("Connected to Database.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 		nombreText.textProperty().bindBidirectional(contacto.nombreProperty());
 		telefonoText.textProperty().bindBidirectional(contacto.telefonoProperty());
 		emailText.textProperty().bindBidirectional(contacto.emailProperty());
-		
-		sexoCombo.getItems().addAll("Hombre", "Mujer", "Otro");
+
+		sexoCombo.getItems().addAll("H", "M", "X");
 		sexoCombo.valueProperty().bindBidirectional(contacto.sexoProperty());
 
+		direccionCombo.getItems().addAll(obtenerCodigosDireccion());
+		direccionCombo.valueProperty().bindBidirectional(contacto.direccionProperty());
+
+		nombreText.setText("Thamara García");
+		telefonoText.setText("999999999");
+		emailText.setText("thamara@gmail.com");
+		sexoCombo.setValue("M");
+
+		direccionCombo.setOnAction(e -> onGetCodigoAction(e));
 		crearButton.setOnAction(e -> onCrearButtonAction(e));
 		cancelarButton.setOnAction(e -> onCancelarButtonAction(e));
 	}
 
 	@FXML
-	private void onCrearButtonAction(ActionEvent e) {
-		devuelto = new Contacto();
-		Contacto.copiar(nuevo, devuelto);
-		stage.close();
+	private Contacto onCrearButtonAction(ActionEvent e) {
+		nombre = nombreText.getText();
+		telefono = telefonoText.getText();
+		email = emailText.getText();
+		sexo = sexoCombo.getValue();
+		direccion = direccionCombo.getSelectionModel().getSelectedItem();
+		codUsuario = ContactosController.getCodUsuario();
+
+		try {
+			PreparedStatement inserta = con.prepareStatement(
+					"INSERT INTO contacto(nomContacto, numTelefono, eMail, sexo, codDireccion, codUsuario) VALUES (?, ?, ?, ?, ?, ?)");
+			inserta.setString(1, nombre);
+			if (telefono.length() == 9) {
+				inserta.setString(2, telefono);
+			} else {
+				App.error("Error en el teléfono", "Inserte bien el número de teléfono");
+			}
+			if (email.contains("@")) {
+				inserta.setString(3, email);
+			} else {
+				App.error("Error en el email", "Inserte bien el email");
+			}
+			inserta.setString(4, sexo);
+			inserta.setInt(5, onGetCodigoAction(e));
+			inserta.setInt(6, codUsuario);
+			inserta.execute();
+			App.info("Inserción Realizada");
+			contacto = new Contacto(nombre, telefono, email, sexo, direccion);
+			stage.close();
+			con.close();
+			return contacto;
+		} catch (Exception e2) {
+			e2.getStackTrace();
+			return contacto;
+		}
 	}
 
 	@FXML
-	private void onCancelarButtonAction(ActionEvent e) {
-		devuelto = null;
-		stage.close();
+	private Contacto onCancelarButtonAction(ActionEvent e) {
+		try {
+			con.close();
+			System.exit(0);
+//			stage.close();
+			return null;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return null;
+
+		}
+	}
+
+	@FXML
+	int onGetCodigoAction(ActionEvent event) {
+		nomMunicipio = direccionCombo.getSelectionModel().getSelectedItem();
+
+		try {
+			PreparedStatement visualiza = con.prepareStatement("SELECT direccion.codDireccion FROM direccion "
+					+ "INNER JOIN municipio ON municipio.codMunicipio = direccion.codMunicipio "
+					+ "WHERE nomMunicipio = ?");
+			visualiza.setString(1, nomMunicipio);
+			ResultSet resultado = visualiza.executeQuery();
+
+			while (resultado.next()) {
+				codDireccion = resultado.getInt(1);
+			}
+			return codDireccion;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return codDireccion;
+		}
+	}
+
+	public static ArrayList<String> obtenerCodigosDireccion() {
+		ArrayList<String> municipios = new ArrayList<String>();
+		try {
+			PreparedStatement visualiza = con.prepareStatement("SELECT nomMunicipio FROM municipio");
+			ResultSet resultado = visualiza.executeQuery();
+
+			while (resultado.next()) {
+				nomMunicipio = resultado.getString(1);
+				municipios.add(nomMunicipio);
+			}
+			return municipios;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public Contacto show(Stage parentStage) {
@@ -92,71 +210,24 @@ public class NuevoController implements Initializable {
 			stage.initOwner(parentStage);
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
-		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setTitle("Nuevo contacto");
-		stage.setResizable(false);
 		stage.setScene(new Scene(getView(), 320, 200));
+		stage.setResizable(false);
+		stage.initOwner(ContactosController.stage);
+		stage.initModality(Modality.WINDOW_MODAL);
 		stage.showAndWait();
-		return devuelto;
+		return contacto;
 	}
 
 	public BorderPane getView() {
 		return view;
 	}
-
-	public TextField getNombreText() {
-		return nombreText;
+	
+	public static Contacto getContacto() {
+		return contacto;
 	}
 
-	public void setNombreText(TextField nombreText) {
-		this.nombreText = nombreText;
-	}
-
-	public TextField getTelefonoText() {
-		return telefonoText;
-	}
-
-	public void setTelefonoText(TextField telefonoText) {
-		this.telefonoText = telefonoText;
-	}
-
-	public TextField getEmailText() {
-		return emailText;
-	}
-
-	public void setEmailText(TextField emailText) {
-		this.emailText = emailText;
-	}
-
-	public ComboBox<String> getSexoCombo() {
-		return sexoCombo;
-	}
-
-	public void setSexoCombo(ComboBox<String> sexoCombo) {
-		this.sexoCombo = sexoCombo;
-	}
-
-	public TextField getProvinciaText() {
-		return provinciaText;
-	}
-
-	public void setProvinciaText(TextField provinciaText) {
-		this.provinciaText = provinciaText;
-	}
-
-	public Button getCrearButton() {
-		return crearButton;
-	}
-
-	public void setCrearButton(Button crearButton) {
-		this.crearButton = crearButton;
-	}
-
-	public Button getCancelarButton() {
-		return cancelarButton;
-	}
-
-	public void setCancelarButton(Button cancelarButton) {
-		this.cancelarButton = cancelarButton;
+	public static Contacto setContacto(Contacto contacto) {
+		return ContactosController.contacto = contacto;
 	}
 }

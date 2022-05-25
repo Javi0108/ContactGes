@@ -8,19 +8,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import fct.contactges.App;
 import fct.contactges.MainController;
+import fct.contactges.editarcontacto.EditarController;
+import fct.contactges.enviaremail.EnviarController;
 import fct.contactges.model.Agenda;
 import fct.contactges.model.Contacto;
 import fct.contactges.nuevocontacto.NuevoController;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,17 +46,19 @@ public class ContactosController implements Initializable {
 
 	// Model
 	private static Agenda agenda = new Agenda();
+	public static Contacto contacto = new Contacto();
 	private ObjectProperty<Contacto> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
 	private static ListProperty<Contacto> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 	// View
 	@FXML
 	private BorderPane view;
-	
-	//TODO Añadir la columna código contacto
-	
+
 	@FXML
 	private TableView<Contacto> contactosTable;
+	
+    @FXML
+    private TableColumn<Contacto, String> idColumn;
 
 	@FXML
 	private TableColumn<Contacto, String> nombreColumn;
@@ -80,7 +87,7 @@ public class ContactosController implements Initializable {
 	@FXML
 	private Button enviarButton;
 
-	private Stage stage;
+	public static Stage stage;
 
 	private static int codUsuario;
 
@@ -122,6 +129,7 @@ public class ContactosController implements Initializable {
 		enviarButton.disableProperty().bind(seleccionado.isNull());
 
 		// Factories
+		idColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getCodContacto()));
 		nombreColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getNombre()));
 		emailColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getEmail()));
 		telefonoColumn.setCellValueFactory(value -> new SimpleStringProperty(value.getValue().getTelefono()));
@@ -138,19 +146,22 @@ public class ContactosController implements Initializable {
 
 	public static List<Contacto> llenarTabla() throws SQLException {
 		PreparedStatement selectContactos = con.prepareStatement(
-				"SELECT contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, direccion.calle FROM contacto INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion WHERE codUsuario = ?");
+				"SELECT contacto.codContacto ,contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, municipio.nomMunicipio FROM contacto "
+						+ "INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion "
+						+ "INNER JOIN municipio ON municipio.codMunicipio = direccion.codMunicipio "
+						+ "WHERE codUsuario = ?");
 
 		selectContactos.setInt(1, setCodUsuario(getCodUsuario()));
 		ResultSet resultado = selectContactos.executeQuery();
 
-		System.out.println(MainController.getCodUsuario());
 		while (resultado.next()) {
 			Contacto c = new Contacto();
-			c.setNombre(resultado.getString(1));
-			c.setTelefono(resultado.getString(2));
-			c.setEmail(resultado.getString(3));
-			c.setSexo(resultado.getString(4));
-			c.setDireccion(resultado.getString(5));
+			c.setCodContacto(String.valueOf(resultado.getInt(1)));
+			c.setNombre(resultado.getString(2));
+			c.setTelefono(resultado.getString(3));
+			c.setEmail(resultado.getString(4));
+			c.setSexo(resultado.getString(5));
+			c.setDireccion(resultado.getString(6));
 			contactoList.add(c);
 		}
 		return contactoList;
@@ -159,73 +170,97 @@ public class ContactosController implements Initializable {
 	@FXML
 	void onNuevoButtonAction(ActionEvent event) {
 		NuevoController controller = new NuevoController();
-		Contacto nuevo = controller.show(stage);
-		if (nuevo != null) {
-			agenda.getContactos().add(nuevo);
-		}
-	}
-
-	@FXML
-	void onEditarButtonAction(ActionEvent event) {
-
+		Contacto contacto = controller.show(App.getPrimaryStage());
+		if(controller != null) {
+			try {
+				contactoList.add(setContacto(NuevoController.getContacto()));
+				contactoList.clear();
+				llenarTabla();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 
 	@FXML
 	void onBorrarButtonAction(ActionEvent event) {
-		String nombre = seleccionado.get().getNombre();
-
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle("Eliminar contacto");
-		alert.setHeaderText("Se dispone a eliminar al contacto '" + nombre + "'.");
-		alert.setContentText("�Desea eliminar el contacto?");
-		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-		Optional<ButtonType> resultado = alert.showAndWait();
-		if (ButtonType.YES.equals(resultado.get())) {
-			// TODO Hacer consulta
-			agenda.getContactos().remove(seleccionado.get());
+		try {
+			String nombre = seleccionado.get().getNombre();
+			int codContacto = Integer.parseInt(seleccionado.get().getCodContacto());
+			
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Eliminar contacto");
+			alert.setHeaderText("Se dispone a eliminar a " + nombre + ".");
+			alert.setContentText("¿Desea eliminar el contacto?");
+			alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+			Optional<ButtonType> resultado = alert.showAndWait();
+			if (ButtonType.YES.equals(resultado.get())) {
+				PreparedStatement borrarContacto;
+				borrarContacto = con.prepareStatement("DELETE FROM contacto WHERE codContacto = ?");
+				borrarContacto.setInt(1, codContacto);
+				borrarContacto.execute();
+				contactoList.remove(seleccionado.get());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			App.error("ERROR", "Error al eliminar el contacto.");
 		}
 	}
 
 	@FXML
 	void onEnviarButtonAction(ActionEvent event) {
-
+		try {
+			EnviarController email = new EnviarController();
+			stage = new Stage();
+			stage.setTitle("Enviar Email");
+			stage.setScene(new Scene(email.getView()));
+			stage.initOwner(App.getPrimaryStage());
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-
-//	private void onEliminarButtonAction(ActionEvent e) {
-//		String nombre = seleccionado.get().getNombre();
-//		
-//		Alert alert = new Alert(AlertType.CONFIRMATION);
-//		alert.setTitle("Eliminar contacto");
-//		alert.setHeaderText("Se dispone a eliminar al contacto '" + nombre + "'.");
-//		alert.setContentText("�Desea eliminar el contacto?");
-//		alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-//		Optional<ButtonType> resultado = alert.showAndWait();
-//		if (ButtonType.YES.equals(resultado.get())) {
-//			agenda.getContactos().remove(seleccionado.get());
-//		}
+	
+//	void onEditarButtonAction(ActionEvent e) {
+//
 //	}
 
-//	private void onEditarButtonAction(ActionEvent e) {
-//		EditarController controller = new EditarController();
-//		controller.show(ContactosApp.getPrimaryStage(), seleccionado.get());
-//	}
-
+	@FXML
+	void onEditarButtonAction(ActionEvent e) {
+		EditarController controller = new EditarController();
+		controller.setContacto(seleccionado.get());
+		controller.show(App.getPrimaryStage());
+	}
+	
 	public BorderPane getView() {
 		return view;
 	}
 
-	public void show() {
+	public void show(Stage parentStage) {
 		try {
 			stage = new Stage();
+			if (parentStage != null) {
+				stage.initOwner(parentStage);
+				stage.getIcons().setAll(parentStage.getIcons());
+			}
 			stage.setTitle("Agenda");
 			stage.setScene(new Scene(getView()));
-			stage.initOwner(App.primaryStage);
+			stage.initOwner(App.getPrimaryStage());
 			stage.initModality(Modality.APPLICATION_MODAL);
 			llenarTabla();
 			stage.showAndWait();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static Contacto getContacto() {
+		return contacto;
+	}
+
+	public static Contacto setContacto(Contacto contacto) {
+		return ContactosController.contacto = contacto;
 	}
 
 	public static int setCodUsuario(int codUsuario) {

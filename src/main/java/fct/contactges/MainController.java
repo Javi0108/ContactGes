@@ -44,7 +44,7 @@ public class MainController implements Initializable {
 	@FXML
 	private Button logInButton;
 
-	public Stage stage = new Stage();
+	public static Stage stage = new Stage();
 
 	public static int codUsuario;
 	public int cantidadUsuario;
@@ -53,7 +53,7 @@ public class MainController implements Initializable {
 	public static String url = "jdbc:mysql://localhost:3306/gescon";
 	public static String usr = "root";
 	public static String pswd = "";
-	public static Connection con;
+	static Connection con;
 
 	public MainController() {
 		try {
@@ -76,6 +76,9 @@ public class MainController implements Initializable {
 
 		usuarioText.textProperty().bindBidirectional(iniciosesion.usuarioProperty());
 		passwordText.textProperty().bindBidirectional(iniciosesion.passwordProperty());
+		
+		usuarioText.setText("Javi0108");
+		passwordText.setText("1234");
 
 		// Listeners
 		logInButton.setOnAction(e -> {
@@ -90,7 +93,12 @@ public class MainController implements Initializable {
 
 	@FXML
 	void onCancelButtonAction(ActionEvent event) {
-		System.exit(0);
+		try {
+			System.exit(0);
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -108,7 +116,7 @@ public class MainController implements Initializable {
 			if (cantidadUsuario == 1) {
 				App.primaryStage.close();
 				ContactosController.setCodUsuario(getCodUsuario());
-				contactoController.show();
+				contactoController.show(App.getPrimaryStage());
 			} else {
 				App.error("Inicio de sesión incorrecto", "Compruebe las credenciales ingresadas");
 			}
