@@ -65,7 +65,7 @@
             </ImageView>
             <Label alignment="CENTER" text="ContactGes" textAlignment="CENTER">
                <font>
-                  <Font name="Calibri Italic" size="39.0" />
+                  <Font name="Calibri" size="39.0" />
                </font>
             </Label>
          </children>
