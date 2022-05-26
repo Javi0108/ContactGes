@@ -135,7 +135,6 @@ public class EnviarController implements Initializable {
 		contacto = enviado;
 		
 		txtRemitente.setText(getEmail());
-		txtPass.setText(getEmailPass());
 		txtDestinatario.setText(contacto.getEmail());
 
 		stage = new Stage();
@@ -162,24 +161,6 @@ public class EnviarController implements Initializable {
 				email = resultado.getString(1);
 			}
 			return email;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	private String getEmailPass() {
-		codUsuario = ContactosController.getCodUsuario();
-
-		try {
-			PreparedStatement visualiza = con.prepareStatement("SELECT emailPass FROM usuario WHERE codUsuario = ?");
-			visualiza.setInt(1, codUsuario);
-			ResultSet resultado = visualiza.executeQuery();
-
-			while (resultado.next()) {
-				emailPass = resultado.getString(1);
-			}
-			return emailPass;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

@@ -177,7 +177,7 @@ public class ContactosController implements Initializable {
 	}
 
 	@FXML
-	void onBorrarButtonAction(ActionEvent event) {
+	void onBorrarButtonAction(ActionEvent event) throws NumberFormatException {
 		try {
 			String nombre = seleccionado.get().getNombre();
 			int codContacto = Integer.parseInt(seleccionado.get().getCodContacto());

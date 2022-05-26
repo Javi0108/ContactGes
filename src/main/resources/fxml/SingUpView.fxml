@@ -15,8 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="view" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -28,6 +27,7 @@
           <RowConstraints vgrow="NEVER" />
             <RowConstraints vgrow="NEVER" />
           <RowConstraints vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
             <Label text="Nombre de Usuario:">
@@ -50,20 +50,20 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </Label>
-            <TextField GridPane.columnIndex="1">
+            <TextField fx:id="usuarioText" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="emailText" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </GridPane.margin>
             </TextField>
             <HBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <PasswordField HBox.hgrow="SOMETIMES" />
-                  <Button mnemonicParsing="false">
+                  <PasswordField fx:id="passwordText" HBox.hgrow="SOMETIMES" />
+                  <Button fx:id="seePasswordButton" mnemonicParsing="false" onAction="#onSeePasswordButtonAction">
                      <graphic>
                         <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -77,25 +77,20 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </GridPane.margin>
             </HBox>
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <PasswordField fx:id="confirmPassText" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </GridPane.margin>
             </PasswordField>
+            <HBox alignment="CENTER" spacing="5.0" GridPane.columnSpan="2" GridPane.rowIndex="4">
+               <children>
+                  <Button fx:id="singUpButton" defaultButton="true" mnemonicParsing="false" onAction="#onSingUpButtonAction" text="Sing Up" />
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButtonAction" text="Cancel" />
+               </children>
+            </HBox>
          </children>
       </GridPane>
    </center>
-   <bottom>
-      <HBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button defaultButton="true" mnemonicParsing="false" text="Sing Up" />
-            <Button mnemonicParsing="false" text="Cancel" />
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="5.0" />
-         </BorderPane.margin>
-      </HBox>
-   </bottom>
    <left>
       <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -111,7 +106,7 @@
             </Label>
          </children>
          <BorderPane.margin>
-            <Insets left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </BorderPane.margin>
       </VBox>
    </left>

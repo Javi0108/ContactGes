@@ -8,7 +8,17 @@ public class InicioSesion {
 	private StringProperty usuario = new SimpleStringProperty(this, "usuario");
 	private StringProperty password = new SimpleStringProperty(this, "password");
 	private StringProperty email = new SimpleStringProperty(this, "email");
-	private StringProperty emailPass = new SimpleStringProperty(this, "emailPass");
+//	private StringProperty emailPass = new SimpleStringProperty(this, "emailPass");
+	
+	public InicioSesion(String usuario, String password, String email) {
+		this.usuario = new SimpleStringProperty(this, "usuario", usuario);
+		this.password = new SimpleStringProperty(this, "password", password);
+		this.email = new SimpleStringProperty(this, "email", email);
+	}
+	
+	public InicioSesion() {
+
+	}
 	
 	public final StringProperty usuarioProperty() {
 		return this.usuario;
@@ -46,15 +56,15 @@ public class InicioSesion {
 		this.emailProperty().set(email);
 	}
 	
-	public final StringProperty emailPassProperty() {
-		return this.emailPass;
-	}
+//	public final StringProperty emailPassProperty() {
+//		return this.emailPass;
+//	}
 	
-	public final String getEmailPass() {
-		return this.emailPassProperty().get();
-	}
+//	public final String getEmailPass() {
+//		return this.emailPassProperty().get();
+//	}
 	
-	public final void setEmailPass(final String emailPass) {
-		this.emailPassProperty().set(emailPass);
-	}
+//	public final void setEmailPass(final String emailPass) {
+//		this.emailPassProperty().set(emailPass);
+//	}
 }

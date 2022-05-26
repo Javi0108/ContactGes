@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import fct.contactges.contacto.ContactosController;
 import fct.contactges.model.InicioSesion;
+import fct.contactges.nuevousuario.NuevoUsuarioController;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.event.ActionEvent;
@@ -129,7 +130,8 @@ public class MainController implements Initializable {
 	
     @FXML
     void onSingUpButtonAction(ActionEvent event) {
-
+    	NuevoUsuarioController nuevoUsuario = new NuevoUsuarioController();
+    	nuevoUsuario.show(App.getPrimaryStage());
     }
 
 	public BorderPane getView() {
