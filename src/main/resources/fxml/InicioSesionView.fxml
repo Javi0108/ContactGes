@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="view" prefHeight="250.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="view" prefHeight="250.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -56,7 +56,7 @@
       </GridPane>
    </center>
    <top>
-      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -65,7 +65,7 @@
             </ImageView>
             <Label alignment="CENTER" text="ContactGes" textAlignment="CENTER">
                <font>
-                  <Font size="29.0" />
+                  <Font name="Calibri Italic" size="39.0" />
                </font>
             </Label>
          </children>

@@ -185,7 +185,7 @@ public class ContactosController implements Initializable {
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Eliminar contacto");
 			Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-			stage.getIcons().add(new Image(this.getClass().getResource("logo.png").toString()));
+			stage.getIcons().add(new Image(this.getClass().getResource("/img/logo.png").toString()));
 			alert.setHeaderText("Se dispone a eliminar a " + nombre + ".");
 			alert.setContentText("¿Desea eliminar el contacto?");
 			alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
