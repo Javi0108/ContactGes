@@ -3,20 +3,20 @@ package fct.contactges.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class InicioSesion {
+public class InicioSesionModel {
 	
 	private StringProperty usuario = new SimpleStringProperty(this, "usuario");
 	private StringProperty password = new SimpleStringProperty(this, "password");
 	private StringProperty email = new SimpleStringProperty(this, "email");
 //	private StringProperty emailPass = new SimpleStringProperty(this, "emailPass");
 	
-	public InicioSesion(String usuario, String password, String email) {
+	public InicioSesionModel(String usuario, String password, String email) {
 		this.usuario = new SimpleStringProperty(this, "usuario", usuario);
 		this.password = new SimpleStringProperty(this, "password", password);
 		this.email = new SimpleStringProperty(this, "email", email);
 	}
 	
-	public InicioSesion() {
+	public InicioSesionModel() {
 
 	}
 	

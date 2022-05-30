@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Contacto {
+public class ContactoModel {
 	private StringProperty codContacto = new SimpleStringProperty(this, "codContacto");
 	private StringProperty nombre = new SimpleStringProperty(this, "nombre");
 	private StringProperty telefono = new SimpleStringProperty(this, "telefono");
@@ -16,7 +16,7 @@ public class Contacto {
 
 
 
-	public Contacto(String nombre, String telefono, String email, String sexo, String direccion) {
+	public ContactoModel(String nombre, String telefono, String email, String sexo, String direccion) {
 		this.nombre = new SimpleStringProperty(this, "nombre", nombre);
 		this.telefono = new SimpleStringProperty(this, "telefono", telefono);
 		this.email = new SimpleStringProperty(this, "email", email);
@@ -25,7 +25,7 @@ public class Contacto {
 
 	}
 	
-	public Contacto() {
+	public ContactoModel() {
 		
 	}
 	
@@ -111,13 +111,5 @@ public class Contacto {
 	
 	public final void setcodDireccion(final int codDireccion) {
 		this.codDireccionProperty().set(codDireccion);
-	}
-	
-	public static void copiar(Contacto origen, Contacto destino) {
-		destino.setNombre(origen.getNombre());
-		destino.setSexo(origen.getSexo());
-		destino.setTelefono(origen.getTelefono());	
-		destino.setEmail(origen.getEmail());
-		destino.setDireccion(origen.getDireccion());
 	}
 }

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import fct.contactges.App;
 import fct.contactges.contacto.ContactosController;
-import fct.contactges.model.Contacto;
+import fct.contactges.model.ContactoModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 public class NuevoController implements Initializable {
 
 	// model
-	private static Contacto contacto = new Contacto();
+	private static ContactoModel contacto = new ContactoModel();
 
 	// Vista
 	@FXML
@@ -101,7 +101,7 @@ public class NuevoController implements Initializable {
 		sexoCombo.getItems().addAll("H", "M", "X");
 		sexoCombo.valueProperty().bindBidirectional(contacto.sexoProperty());
 
-		direccionCombo.getItems().addAll(obtenerCodigosDireccion());
+		direccionCombo.getItems().addAll(obtenerMunicipios());
 		direccionCombo.valueProperty().bindBidirectional(contacto.direccionProperty());
 
 		direccionCombo.setOnAction(e -> onGetCodigoAction(e));
@@ -110,7 +110,7 @@ public class NuevoController implements Initializable {
 	}
 
 	@FXML
-	private Contacto onCrearButtonAction(ActionEvent e) {
+	private ContactoModel onCrearButtonAction(ActionEvent e) {
 		nombre = nombreText.getText();
 		telefono = telefonoText.getText();
 		email = emailText.getText();
@@ -140,26 +140,23 @@ public class NuevoController implements Initializable {
 			inserta.setInt(6, codUsuario);
 			inserta.execute();
 			App.info("Inserción Realizada");
-			contacto = new Contacto(nombre, telefono, email, sexo, direccion);
+			contacto = new ContactoModel(nombre, telefono, email, sexo, direccion);
 			stage.close();
 			con.close();
 			return contacto;
 		} catch (Exception e2) {
 			e2.getStackTrace();
-			return contacto;
+			return null;
 		}
 	}
 
 	@FXML
-	private Contacto onCancelarButtonAction(ActionEvent e) {
+	private void onCancelarButtonAction(ActionEvent e) {
 		try {
 			con.close();
 			stage.close();
-			return null;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-			return null;
-
 		}
 	}
 
@@ -184,7 +181,7 @@ public class NuevoController implements Initializable {
 		}
 	}
 
-	public static ArrayList<String> obtenerCodigosDireccion() {
+	public static ArrayList<String> obtenerMunicipios() {
 		ArrayList<String> municipios = new ArrayList<String>();
 		try {
 			PreparedStatement visualiza = con.prepareStatement("SELECT nomMunicipio FROM municipio");
@@ -201,7 +198,7 @@ public class NuevoController implements Initializable {
 		}
 	}
 
-	public Contacto show(Stage parentStage) {
+	public ContactoModel show(Stage parentStage) {
 		stage = new Stage();
 		if (parentStage != null) {
 			stage.initOwner(parentStage);
@@ -220,11 +217,7 @@ public class NuevoController implements Initializable {
 		return view;
 	}
 
-	public static Contacto getContacto() {
+	public static ContactoModel getContacto() {
 		return contacto;
-	}
-
-	public static Contacto setContacto(Contacto contacto) {
-		return ContactosController.contacto = contacto;
 	}
 }

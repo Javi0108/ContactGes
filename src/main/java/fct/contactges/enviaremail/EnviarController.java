@@ -17,7 +17,7 @@ import org.apache.commons.mail.SimpleEmail;
 
 import fct.contactges.App;
 import fct.contactges.contacto.ContactosController;
-import fct.contactges.model.Contacto;
+import fct.contactges.model.ContactoModel;
 import fct.contactges.model.EnviarModel;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
@@ -30,13 +30,14 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class EnviarController implements Initializable {
 
 	private EnviarModel model = new EnviarModel();
-	private Contacto contacto = new Contacto();
+	private ContactoModel contacto = new ContactoModel();
 
 	@FXML
 	private BorderPane view;
@@ -44,8 +45,11 @@ public class EnviarController implements Initializable {
 	@FXML
 	private TextField txtRemitente;
 
-	@FXML
-	private PasswordField txtPass;
+    @FXML
+    private HBox seePasswordHBox;
+	
+    @FXML
+    private Button seePasswordButton;
 
 	@FXML
 	private TextField txtDestinatario;
@@ -68,6 +72,10 @@ public class EnviarController implements Initializable {
 	public static String pswd = "";
 	public static Connection con;
 	
+	PasswordField txtPass;
+	TextField seePasswordText;
+	Boolean visible;
+	
 	public Stage stage;
 	
 	int codUsuario;
@@ -88,13 +96,26 @@ public class EnviarController implements Initializable {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		// Para poder ver la contraseña
+		txtPass = new PasswordField();
+		txtPass.setPromptText("Contaseña");
+		txtPass.setPrefWidth(250);
+		txtPass.setVisible(true);
+		txtPass.setDisable(false);
+		seePasswordText = new TextField();
+		seePasswordText.setPrefWidth(250);
+		seePasswordText.setVisible(false);
+		seePasswordText.setDisable(true);
+		seePasswordHBox.getChildren().add(txtPass);
+		visible = true;
 	
 		Bindings.bindBidirectional(model.remitenteProperty(), txtRemitente.textProperty());
 		Bindings.bindBidirectional(model.contraseñaProperty(), txtPass.textProperty());
 		Bindings.bindBidirectional(model.destinatarioProperty(), txtDestinatario.textProperty());
 		Bindings.bindBidirectional(model.asuntoProperty(), txtAsunto.textProperty());
 		Bindings.bindBidirectional(model.mensajeProperty(), txtMensaje.textProperty());
-
+		
 		enviarButton.setOnAction(e -> {
 			try {
 				OnActionEnviar(e);
@@ -128,13 +149,39 @@ public class EnviarController implements Initializable {
 
 	@FXML
 	public void OnActionCerrar(ActionEvent e) {
-		stage.close();
+		try {
+			stage.close();
+			con.close();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
+	
+    @FXML
+    void onSeePasswordButtonAction(ActionEvent event) {
+		String password;
+		if(visible) {
+			password = txtPass.getText();
+			seePasswordText.setText(password);
+			seePasswordHBox.getChildren().clear();
+			seePasswordHBox.getChildren().add(seePasswordText);
+			seePasswordText.setPrefWidth(250);
+			seePasswordText.setVisible(true);
+			seePasswordText.setDisable(false);
+			visible = false;
+		} else if(!visible) {
+    		password = seePasswordText.getText();
+    		txtPass.setText(password);
+    		seePasswordHBox.getChildren().clear();
+    		seePasswordHBox.getChildren().add(txtPass);
+    		visible = true;
+		}
+    }
 
-	public void show(Stage parentStage, Contacto enviado) {
+	public void show(Stage parentStage, ContactoModel enviado) {
 		contacto = enviado;
 		
-		txtRemitente.setText(getEmail());
+		txtRemitente.setText(getRemitente());
 		txtDestinatario.setText(contacto.getEmail());
 
 		stage = new Stage();
@@ -149,7 +196,7 @@ public class EnviarController implements Initializable {
 		stage.showAndWait();
 	}
 	
-	private String getEmail() {
+	private String getRemitente() {
 		codUsuario = ContactosController.getCodUsuario();
 
 		try {
@@ -169,9 +216,5 @@ public class EnviarController implements Initializable {
 
 	public BorderPane getView() {
 		return view;
-	}
-
-	public void setView(BorderPane view) {
-		this.view = view;
 	}
 }

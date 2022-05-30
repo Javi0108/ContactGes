@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import fct.contactges.contacto.ContactosController;
-import fct.contactges.model.InicioSesion;
+import fct.contactges.model.InicioSesionModel;
 import fct.contactges.nuevousuario.NuevoUsuarioController;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -28,7 +28,7 @@ public class MainController implements Initializable {
 	public static ContactosController contactoController = new ContactosController();
 
 	// Model
-	InicioSesion iniciosesion = new InicioSesion();
+	InicioSesionModel iniciosesion = new InicioSesionModel();
 
 	@FXML
 	private BorderPane view;
@@ -73,7 +73,6 @@ public class MainController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-			System.out.println("Connected to Database.");
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}

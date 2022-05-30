@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import fct.contactges.App;
 import fct.contactges.contacto.ContactosController;
-import fct.contactges.model.Contacto;
+import fct.contactges.model.ContactoModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +30,7 @@ import javafx.stage.Stage;
 public class EditarController implements Initializable {
 
 	// model
-	private static Contacto contacto = new Contacto();
+	private static ContactoModel contacto = new ContactoModel();
 
 	// Vista
 	@FXML
@@ -101,7 +101,7 @@ public class EditarController implements Initializable {
 		sexoCombo.getItems().addAll("H", "M", "X");
 		sexoCombo.valueProperty().bindBidirectional(contacto.sexoProperty());
 
-		direccionCombo.getItems().addAll(obtenerCodigosDireccion());
+		direccionCombo.getItems().addAll(obtenerMunicipios());
 		direccionCombo.valueProperty().bindBidirectional(contacto.direccionProperty());
 
 		modificarButton.setOnAction(e -> onModificarButtonAction(e));
@@ -178,7 +178,7 @@ public class EditarController implements Initializable {
 		}
 	}
 
-	public static ArrayList<String> obtenerCodigosDireccion() {
+	public static ArrayList<String> obtenerMunicipios() {
 		ArrayList<String> municipios = new ArrayList<String>();
 		try {
 			PreparedStatement visualiza = con.prepareStatement("SELECT nomMunicipio FROM municipio");
@@ -195,7 +195,7 @@ public class EditarController implements Initializable {
 		}
 	}
 
-	public Contacto show(Stage parentStage, Contacto enviado) {
+	public ContactoModel show(Stage parentStage, ContactoModel enviado) {
 		contacto = enviado;
 		darValores();
 		stage = new Stage();
@@ -224,7 +224,7 @@ public class EditarController implements Initializable {
 		return view;
 	}
 
-	public Contacto getContacto() {
+	public ContactoModel getContacto() {
 		return contacto;
 	}
 }

@@ -57,7 +57,6 @@ public class App extends Application {
 		alert.initOwner(primaryStage);
 		alert.setTitle("ContactGes - Info");
 		alert.setHeaderText(header);
-//		alert.setContentText("");
 		alert.initOwner(primaryStage);
 		alert.showAndWait();
 	}

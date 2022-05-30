@@ -15,7 +15,7 @@ import fct.contactges.App;
 import fct.contactges.MainController;
 import fct.contactges.editarcontacto.EditarController;
 import fct.contactges.enviaremail.EnviarController;
-import fct.contactges.model.Contacto;
+import fct.contactges.model.ContactoModel;
 import fct.contactges.nuevocontacto.NuevoController;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -42,34 +42,34 @@ import javafx.scene.control.Alert.AlertType;
 public class ContactosController implements Initializable {
 
 	// Model
-	public static Contacto contacto = new Contacto();
-	public ObjectProperty<Contacto> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
-	private static ListProperty<Contacto> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
+	public static ContactoModel contacto = new ContactoModel();
+	public ObjectProperty<ContactoModel> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
+	private static ListProperty<ContactoModel> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
 
 	// View
 	@FXML
 	private BorderPane view;
 
 	@FXML
-	private TableView<Contacto> contactosTable;
+	private TableView<ContactoModel> contactosTable;
 
 	@FXML
-	private TableColumn<Contacto, String> idColumn;
+	private TableColumn<ContactoModel, String> idColumn;
 
 	@FXML
-	private TableColumn<Contacto, String> nombreColumn;
+	private TableColumn<ContactoModel, String> nombreColumn;
 
 	@FXML
-	private TableColumn<Contacto, String> telefonoColumn;
+	private TableColumn<ContactoModel, String> telefonoColumn;
 
 	@FXML
-	private TableColumn<Contacto, String> emailColumn;
+	private TableColumn<ContactoModel, String> emailColumn;
 
 	@FXML
-	private TableColumn<Contacto, String> sexoColumn;
+	private TableColumn<ContactoModel, String> sexoColumn;
 
 	@FXML
-	private TableColumn<Contacto, String> direccionColumn;
+	private TableColumn<ContactoModel, String> direccionColumn;
 
 	@FXML
 	private Button nuevoButton;
@@ -109,7 +109,6 @@ public class ContactosController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-			System.out.println("Connected to Database.");
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
@@ -138,7 +137,7 @@ public class ContactosController implements Initializable {
 
 	}
 
-	public static List<Contacto> llenarTabla() throws SQLException {
+	public static List<ContactoModel> llenarTabla() throws SQLException {
 		PreparedStatement selectContactos = con.prepareStatement(
 				"SELECT contacto.codContacto ,contacto.nomContacto, contacto.numTelefono, contacto.eMail, contacto.sexo, municipio.nomMunicipio FROM contacto "
 						+ "INNER JOIN direccion ON direccion.codDireccion = contacto.codDireccion "
@@ -149,7 +148,7 @@ public class ContactosController implements Initializable {
 		ResultSet resultado = selectContactos.executeQuery();
 
 		while (resultado.next()) {
-			Contacto c = new Contacto();
+			ContactoModel c = new ContactoModel();
 			c.setCodContacto(String.valueOf(resultado.getInt(1)));
 			c.setNombre(resultado.getString(2));
 			c.setTelefono(resultado.getString(3));
@@ -248,11 +247,11 @@ public class ContactosController implements Initializable {
 		}
 	}
 
-	public static Contacto getContacto() {
+	public static ContactoModel getContacto() {
 		return contacto;
 	}
 
-	public static Contacto setContacto(Contacto contacto) {
+	public static ContactoModel setContacto(ContactoModel contacto) {
 		return ContactosController.contacto = contacto;
 	}
 
@@ -264,19 +263,19 @@ public class ContactosController implements Initializable {
 		return codUsuario;
 	}
 
-	public TableView<Contacto> getContactosTable() {
+	public TableView<ContactoModel> getContactosTable() {
 		return contactosTable;
 	}
 
-	public TableColumn<Contacto, String> getNombreColumn() {
+	public TableColumn<ContactoModel, String> getNombreColumn() {
 		return nombreColumn;
 	}
 
-	public TableColumn<Contacto, String> getSexoColumn() {
+	public TableColumn<ContactoModel, String> getSexoColumn() {
 		return sexoColumn;
 	}
 
-	public TableColumn<Contacto, String> getTelefonoColumn() {
+	public TableColumn<ContactoModel, String> getTelefonoColumn() {
 		return telefonoColumn;
 	}
 
