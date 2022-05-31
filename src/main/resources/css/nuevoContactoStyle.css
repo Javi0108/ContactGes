@@ -1,0 +1,32 @@
+#addButton {
+    -fx-border-color: #39C449;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 3px;
+	-fx-background-color: #39C449;
+}
+
+#addButton:pressed{
+	-fx-background-color: #2D9B3A;
+	-fx-border-color: #2D9B3A;
+
+}
+
+#cancelButton{
+	-fx-border-color: #DADADA;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 6px;
+	-fx-background-color: #E9E9E9;
+	-fx-text-fill: black;
+}
+
+#cancelButton:pressed{
+	-fx-background-color: #BDBDBD;
+	-fx-border-color: #BDBDBD;
+
+}
+
+#leftBox{
+	-fx-background-color: #BDFFC4;
+}

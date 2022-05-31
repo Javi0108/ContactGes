@@ -92,7 +92,6 @@ public class EnviarController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-			System.out.println("Connected to Database.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

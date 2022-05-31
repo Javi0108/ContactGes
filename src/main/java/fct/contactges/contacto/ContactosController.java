@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import fct.contactges.App;
-import fct.contactges.MainController;
 import fct.contactges.editarcontacto.EditarController;
 import fct.contactges.enviaremail.EnviarController;
 import fct.contactges.model.ContactoModel;
@@ -44,7 +43,8 @@ public class ContactosController implements Initializable {
 	// Model
 	public static ContactoModel contacto = new ContactoModel();
 	public ObjectProperty<ContactoModel> seleccionado = new SimpleObjectProperty<>(this, "seleccionado");
-	private static ListProperty<ContactoModel> contactoList = new SimpleListProperty<>(FXCollections.observableArrayList());
+	private static ListProperty<ContactoModel> contactoList = new SimpleListProperty<>(
+			FXCollections.observableArrayList());
 
 	// View
 	@FXML
@@ -82,12 +82,10 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	private Button enviarButton;
-	
+
 	public static Stage stage;
 
 	private static int codUsuario;
-
-	MainController mainController;
 
 	// Conexión
 	public static String url = "jdbc:mysql://localhost:3306/gescon";
@@ -162,9 +160,9 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	void onNuevoButtonAction(ActionEvent event) {
-		NuevoController controller = new NuevoController();
-		controller.show(App.getPrimaryStage());
-		if (controller != null) {
+		NuevoController nuevoController = new NuevoController();
+		nuevoController.show(App.getPrimaryStage());
+		if (nuevoController != null) {
 			try {
 				contactoList.add(setContacto(NuevoController.getContacto()));
 				contactoList.clear();
@@ -189,7 +187,7 @@ public class ContactosController implements Initializable {
 			alert.setContentText("¿Desea eliminar el contacto?");
 			alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 			Optional<ButtonType> resultado = alert.showAndWait();
-			
+
 			if (ButtonType.YES.equals(resultado.get())) {
 				PreparedStatement borrarContacto;
 				borrarContacto = con.prepareStatement("DELETE FROM contacto WHERE codContacto = ?");
@@ -215,8 +213,8 @@ public class ContactosController implements Initializable {
 
 	@FXML
 	void onEditarButtonAction(ActionEvent e) {
-		EditarController controller = new EditarController();
-		controller.show(App.getPrimaryStage(), seleccionado.get());
+		EditarController editarController = new EditarController();
+		editarController.show(App.getPrimaryStage(), seleccionado.get());
 		try {
 			contactoList.clear();
 			llenarTabla();
@@ -238,7 +236,7 @@ public class ContactosController implements Initializable {
 			}
 			stage.setTitle("ContactGes");
 			Scene scene = new Scene(getView(), 680, 480);
-				scene.getStylesheets().add("/css/contactosStyle.css");
+			scene.getStylesheets().add("/css/contactosStyle.css");
 			stage.setScene(scene);
 			stage.initOwner(App.getPrimaryStage());
 			stage.initModality(Modality.APPLICATION_MODAL);

@@ -89,7 +89,6 @@ public class EditarController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-			System.out.println("Connected to Database.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -204,7 +203,9 @@ public class EditarController implements Initializable {
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
 		stage.setTitle("ContactGes - Editar contacto");
-		stage.setScene(new Scene(getView(), 320, 200));
+		Scene scene = new Scene(getView(), 500, 230);
+		scene.getStylesheets().add("/css/editarContactoStyle.css");
+		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.initOwner(ContactosController.stage);
 		stage.initModality(Modality.WINDOW_MODAL);

@@ -3,16 +3,17 @@
 }
 
 #logInButton{
-	-fx-border-color: #E27100;
+	-fx-border-color: #56bdeb;
 	-fx-border-width: 2px;
 	-fx-border-style: solid;
 	-fx-border-radius: 3px;
-	-fx-background-color: transparent;
-	-fx-text-fill: #E27100;
+	-fx-background-color: #56bdeb;
+	-fx-text-fill: black;
 }
 
-#logInButton:hover{
-	-fx-background-color: #E27100;
+#logInButton:pressed{
+	-fx-background-color: #3B8D90;
+	-fx-border-color: #3B8D90;
 	-fx-text-fill: white;
 }
 
@@ -20,7 +21,7 @@
 	-fx-border-color: #DADADA;
 	-fx-border-width: 2px;
 	-fx-border-style: solid;
-	-fx-border-radius: 6px;
+	-fx-border-radius: 3px;
 	-fx-background-color: #E9E9E9;
 	-fx-text-fill: black;
 }
@@ -29,7 +30,7 @@
 	-fx-border-color: #DADADA;
 	-fx-border-width: 2px;
 	-fx-border-style: solid;
-	-fx-border-radius: 6px;
+	-fx-border-radius: 3px;
 	-fx-background-color: #E9E9E9;
 	-fx-text-fill: black;
 }

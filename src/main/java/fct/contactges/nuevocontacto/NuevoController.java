@@ -89,7 +89,6 @@ public class NuevoController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			con = DriverManager.getConnection(url, usr, pswd);
-			System.out.println("Connected to Database.");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -151,12 +150,14 @@ public class NuevoController implements Initializable {
 	}
 
 	@FXML
-	private void onCancelarButtonAction(ActionEvent e) {
+	private ContactoModel onCancelarButtonAction(ActionEvent e) {
 		try {
 			con.close();
 			stage.close();
+			return null;
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			return null;
 		}
 	}
 
@@ -205,7 +206,9 @@ public class NuevoController implements Initializable {
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
 		stage.setTitle("ContactGes - Nuevo contacto");
-		stage.setScene(new Scene(getView(), 320, 200));
+		Scene scene = new Scene(getView(), 500, 230);
+		scene.getStylesheets().add("/css/nuevoContactoStyle.css");
+		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.initOwner(ContactosController.stage);
 		stage.initModality(Modality.WINDOW_MODAL);
