@@ -1,0 +1,30 @@
+#fondo {
+	-fx-background-color: #FFFFFF;
+}
+
+#cancelButton{
+	-fx-border-color: #DADADA;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 6px;
+	-fx-background-color: #E9E9E9;
+	-fx-text-fill: black;
+}
+
+#singUpButton{
+	-fx-border-color: #39C449;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 3px;
+	-fx-background-color: transparent;
+	-fx-text-fill: #39C449;
+}
+
+#singUpButton:hover{
+	-fx-background-color: #39C449;
+	-fx-text-fill: white;
+}
+
+#leftBox{
+	-fx-background-color: #F0F0F0;
+}

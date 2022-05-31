@@ -1,0 +1,43 @@
+#tableView {
+    -fx-base:  #dcd4cc;
+    -fx-control-inner-background:  #dcd4cc;
+    -fx-background-color:  white;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: #dcd4cc;
+}
+
+#addButton {
+	-fx-border-color: #42b953;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 3px;
+	-fx-background-color: #42b953;
+    -fx-text-fill: #42b953;
+}
+
+#editButton {
+    -fx-border-color: #52c1c5;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 3px;
+	-fx-background-color: #52c1c5;
+    -fx-text-fill: #52c1c5;
+}
+
+#deleteButton {
+    -fx-border-color: #ec8904;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 3px;
+	-fx-background-color: #ec8904;
+    -fx-text-fill: #ec8904;
+}
+
+#emailButton {
+    -fx-border-color: #aca9a4;
+	-fx-border-width: 2px;
+	-fx-border-style: solid;
+	-fx-border-radius: 3px;
+	-fx-background-color: #aca9a4;
+    -fx-text-fill: #aca9a4;
+}

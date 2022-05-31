@@ -39,12 +39,6 @@ public class NuevoUsuarioController implements Initializable {
 	@FXML
 	private TextField emailText;
 
-//    @FXML
-//    private PasswordField passwordText;
-
-//    @FXML
-//    private TextField seePasswordText;
-
 	@FXML
 	private HBox passwordHBox;
 
@@ -94,6 +88,7 @@ public class NuevoUsuarioController implements Initializable {
 
 		passwordText = new PasswordField();
 		passwordText.setPrefWidth(250);
+		passwordText.setPromptText("Password");
 		passwordText.setVisible(true);
 		passwordText.setDisable(false);
 		seePasswordText = new TextField();
@@ -127,6 +122,7 @@ public class NuevoUsuarioController implements Initializable {
 			passwordHBox.getChildren().clear();
 			passwordHBox.getChildren().add(seePasswordText);
 			seePasswordText.setPrefWidth(250);
+			seePasswordText.setPromptText("Password");
 			seePasswordText.setVisible(true);
 			seePasswordText.setDisable(false);
 			visible = false;
@@ -178,7 +174,9 @@ public class NuevoUsuarioController implements Initializable {
 			stage.getIcons().setAll(parentStage.getIcons());
 		}
 		stage.setTitle("ContactGes - Nuevo usuario");
-		stage.setScene(new Scene(getView(), 600, 230));
+		Scene scene = new Scene(getView());
+			scene.getStylesheets().add("/css/nuevoUsuarioStyle.css");
+		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.initOwner(App.getPrimaryStage());
 		stage.initModality(Modality.WINDOW_MODAL);

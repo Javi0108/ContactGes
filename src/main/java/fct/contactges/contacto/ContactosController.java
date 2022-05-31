@@ -237,7 +237,9 @@ public class ContactosController implements Initializable {
 				stage.getIcons().setAll(parentStage.getIcons());
 			}
 			stage.setTitle("ContactGes");
-			stage.setScene(new Scene(getView(), 680, 480));
+			Scene scene = new Scene(getView(), 680, 480);
+				scene.getStylesheets().add("/css/contactosStyle.css");
+			stage.setScene(scene);
 			stage.initOwner(App.getPrimaryStage());
 			stage.initModality(Modality.APPLICATION_MODAL);
 			llenarTabla();

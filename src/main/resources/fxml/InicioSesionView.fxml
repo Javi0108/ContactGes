@@ -15,9 +15,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="view" prefHeight="250.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane id="fondo" fx:id="view" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <GridPane BorderPane.alignment="CENTER">
+      <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" prefWidth="25.0" />
           <ColumnConstraints hgrow="NEVER" />
@@ -27,6 +27,8 @@
         <rowConstraints>
           <RowConstraints vgrow="NEVER" />
           <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
         </rowConstraints>
          <children>
             <Label text="User:" GridPane.columnIndex="1">
@@ -44,19 +46,41 @@
                   <Insets bottom="5.0" right="15.0" />
                </GridPane.margin>
             </TextField>
-            <PasswordField fx:id="passwordText" promptText="password" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <PasswordField fx:id="passwordText" promptText="Password" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="15.0" />
                </GridPane.margin>
             </PasswordField>
+            <VBox spacing="5.0" />
+            <HBox alignment="CENTER" spacing="5.0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+               <children>
+                  <Button id="logInButton" fx:id="logInButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#onlogInButtonAction" text="Log In" />
+                  <Button id="cancelButton" fx:id="cancelButton" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#onCancelButtonAction" text="Cancel" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+               <GridPane.margin>
+                  <Insets bottom="5.0" top="10.0" />
+               </GridPane.margin>
+            </HBox>
+            <HBox alignment="CENTER" spacing="5.0" GridPane.columnSpan="3" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="3">
+               <children>
+                  <Label text="You do not have an account?" />
+                  <Button id="singUpButton" fx:id="singUpButton" mnemonicParsing="false" onAction="#onSingUpButtonAction" text="Sing Up" />
+               </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </HBox>
          </children>
          <padding>
             <Insets top="5.0" />
          </padding>
       </GridPane>
    </center>
-   <top>
-      <VBox alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
+   <left>
+      <VBox id="leftBox" alignment="CENTER" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -70,32 +94,8 @@
             </Label>
          </children>
          <padding>
-            <Insets bottom="5.0" />
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </padding>
       </VBox>
-   </top>
-   <bottom>
-      <VBox spacing="5.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox alignment="CENTER" spacing="5.0">
-               <children>
-                  <Button fx:id="logInButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#onlogInButtonAction" text="Log In" />
-                  <Button fx:id="cancelButton" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#onCancelButtonAction" text="Cancel" />
-               </children>
-               <padding>
-                  <Insets bottom="5.0" top="5.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" spacing="5.0" VBox.vgrow="NEVER">
-               <children>
-                  <Label text="You do not have an account?" />
-                  <Button fx:id="singUpButton" mnemonicParsing="false" onAction="#onSingUpButtonAction" text="Sing Up" />
-               </children>
-               <VBox.margin>
-                  <Insets bottom="5.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-   </bottom>
+   </left>
 </BorderPane>

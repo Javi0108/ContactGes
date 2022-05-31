@@ -11,7 +11,7 @@
 
 <BorderPane fx:id="view" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <TableView fx:id="contactosTable" editable="true" BorderPane.alignment="CENTER">
+      <TableView id="tableView" fx:id="contactosTable" editable="true" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="idColumn" maxWidth="2500.0" minWidth="-1.0" prefWidth="-1.0" text="ID" />
           <TableColumn fx:id="nombreColumn" minWidth="-1.0" prefWidth="-1.0" text="Nombre" />
@@ -31,7 +31,7 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="40.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="nuevoButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNuevoButtonAction" HBox.hgrow="SOMETIMES">
+            <Button id="addButton" fx:id="nuevoButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onNuevoButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -39,7 +39,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="editarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEditarButtonAction" HBox.hgrow="SOMETIMES">
+            <Button id="editButton" fx:id="editarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEditarButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -47,7 +47,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="borrarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBorrarButtonAction" HBox.hgrow="SOMETIMES">
+            <Button id="deleteButton" fx:id="borrarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onBorrarButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -55,7 +55,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="enviarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEnviarButtonAction" HBox.hgrow="SOMETIMES">
+            <Button id="emailButton" fx:id="enviarButton" disable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onEnviarButtonAction" HBox.hgrow="SOMETIMES">
                <graphic>
                   <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>

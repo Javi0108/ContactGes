@@ -17,10 +17,13 @@ public class App extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		App.primaryStage = primaryStage;
 		mainController = new MainController();
+		
+		Scene scene = new Scene(mainController.getView(), 500, 230);
+		scene.getStylesheets().add("/css/inicioSesionStyle.css");
 						
 		primaryStage.setTitle("ContactGes");
 		primaryStage.getIcons().add(new Image(App.class.getResourceAsStream("/img/logo.png")));
-		primaryStage.setScene(new Scene(mainController.getView(), 290, 335));
+		primaryStage.setScene(scene);
 		primaryStage.setResizable(false);
 		primaryStage.show();
 
