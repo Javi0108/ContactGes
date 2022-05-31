@@ -142,7 +142,8 @@ public class EditarController implements Initializable {
 			con.close();
 		} catch (Exception e2) {
 			e2.getStackTrace();
-			App.error("Error en la modificación", "No se pudo modificar el contacto: " + e2);
+			System.out.println(e2);
+//			App.error("Error en la modificación", "No se pudo modificar el contacto: " + e2);
 		}
 	}
 	
@@ -177,12 +178,12 @@ public class EditarController implements Initializable {
 		}
 	}
 
-	public static ArrayList<String> obtenerMunicipios() {
+	public ArrayList<String> obtenerMunicipios() {
 		ArrayList<String> municipios = new ArrayList<String>();
 		try {
 			PreparedStatement visualiza = con.prepareStatement("SELECT nomMunicipio FROM municipio");
 			ResultSet resultado = visualiza.executeQuery();
-
+			
 			while (resultado.next()) {
 				nomMunicipio = resultado.getString(1);
 				municipios.add(nomMunicipio);
@@ -193,7 +194,7 @@ public class EditarController implements Initializable {
 			return null;
 		}
 	}
-
+	
 	public ContactoModel show(Stage parentStage, ContactoModel enviado) {
 		contacto = enviado;
 		darValores();

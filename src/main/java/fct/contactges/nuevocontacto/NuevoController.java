@@ -182,11 +182,15 @@ public class NuevoController implements Initializable {
 		}
 	}
 
-	public static ArrayList<String> obtenerMunicipios() {
+	public ArrayList<String> obtenerMunicipios() {
 		ArrayList<String> municipios = new ArrayList<String>();
 		try {
 			PreparedStatement visualiza = con.prepareStatement("SELECT nomMunicipio FROM municipio");
 			ResultSet resultado = visualiza.executeQuery();
+			
+			if(!municipios.contains(direccionCombo.getValue())) {
+				municipios.add(direccionCombo.getSelectionModel().getSelectedItem());
+			}
 
 			while (resultado.next()) {
 				nomMunicipio = resultado.getString(1);
